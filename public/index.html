@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Video Calling & Earning</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- অথেনটিকেশন কনটেইনার -->
+    <div id="auth-container" class="view-panel active">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button id="tab-login-btn" class="tab-btn active" onclick="switchAuthTab('login')">লগইন</button>
+                <button id="tab-signup-btn" class="tab-btn" onclick="switchAuthTab('signup')">রেজিস্ট্রেশন</button>
+            </div>
+
+            <!-- লগইন ফর্ম -->
+            <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>ইউজারনেম</label>
+                    <input type="text" id="login-username" required placeholder="ইউজারনেম লিখুন">
+                </div>
+                <div class="input-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="login-password" required placeholder="পাসওয়ার্ড লিখুন">
+                </div>
+                <button type="submit" class="primary-btn">লগইন করুন</button>
+            </form>
+
+            <!-- সাইনআপ ফর্ম -->
+            <form id="signup-form" class="auth-form hidden" onsubmit="handleSignup(event)">
+                <div class="input-group">
+                    <label>ইউজারনেম</label>
+                    <input type="text" id="signup-username" required placeholder="ইউজারনেম নির্বাচন করুন">
+                </div>
+                <div class="input-group">
+                    <label>ফোন নম্বর</label>
+                    <input type="tel" id="signup-phone" required placeholder="০১৭১XXXXXXX">
+                </div>
+                <div class="input-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="signup-password" required placeholder="গোপন পাসওয়ার্ড">
+                </div>
+                <div class="input-group">
+                    <label>রেফার কোড (যদি থাকে)</label>
+                    <input type="text" id="signup-refcode" placeholder="রেফার কোড বসান">
+                </div>
+                <button type="submit" class="primary-btn">একাউন্ট তৈরি করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- মেইন অ্যাপ শেল -->
+    <div id="app-container" class="view-panel hidden">
+        <header class="top-nav">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                <span>BigoStream Live</span>
+            </div>
+            <div class="nav-right">
+                <div class="wallet-badge" onclick="showView('wallet-view')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v12M8 10h8M8 14h8"></path></svg>
+                    <span id="nav-coins">0</span>
+                </div>
+                <button class="icon-btn" onclick="handleLogout()" title="লগআউট">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <!-- হোম ভিউ (Bigo Live স্টাইল গ্রিড) -->
+            <section id="home-view" class="sub-view active">
+                <div class="section-title">
+                    <h2>সক্রিয় ইউজারগণ</h2>
+                    <span class="pulse-indicator"></span>
+                </div>
+                <div id="users-grid" class="user-grid"></div>
+            </section>
+
+            <!-- ইউজার বিস্তারিত প্রোফাইল ভিউ -->
+            <section id="profile-view" class="sub-view hidden">
+                <div class="profile-card">
+                    <div class="avatar-wrapper">
+                        <svg class="default-avatar" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </div>
+                    <h3 id="prof-name">ইউজারনেম</h3>
+                    <p id="prof-agency-tag" class="agency-tag">কোন এজেন্সিতে নেই</p>
+
+                    <div class="action-buttons-group">
+                        <button class="call-btn" onclick="initiateCall()">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                            ভিডিও কল
+                        </button>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-num" id="prof-total-time">০ মিনিট</span>
+                            <span class="stat-label">মোট লাইভ সময়</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-num" id="prof-coins">০</span>
+                            <span class="stat-label">কয়েন আর্নিং</span>
+                        </div>
+                    </div>
+
+                    <div class="ref-link-box">
+                        <label>রেফারেল লিংক ও কোড</label>
+                        <div class="copy-field">
+                            <input type="text" id="prof-ref-code" readonly>
+                            <button onclick="copyReferralLink()">কপি</button>
+                        </div>
+                        <small>শর্ত: রেফার করা ইউজারকে ১০ মিনিট কল সম্পন্ন করতে হবে।</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ওয়ালেট ও উইথড্রল ভিউ -->
+            <section id="wallet-view" class="sub-view hidden">
+                <div class="wallet-dashboard">
+                    <div class="wallet-header">
+                        <h3>কয়েন ওয়ালেট</h3>
+                        <div class="balance-display">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v12M8 10h8M8 14h8"></path></svg>
+                            <span id="wallet-coins-total">0</span>
+                        </div>
+                    </div>
+
+                    <div class="recharge-section">
+                        <h4>কয়েন রিচার্জ</h4>
+                        <div class="recharge-buttons">
+                            <button onclick="rechargeCoins(10000)">+১০,০০০ কয়েন</button>
+                            <button onclick="rechargeCoins(50000)">+৫০,০০০ কয়েন</button>
+                        </div>
+                    </div>
+
+                    <div class="withdraw-section">
+                        <h4>টাকা উত্তোলন (উইথড্র)</h4>
+                        <p class="rule-hint">শর্ত: ৫০,০০০ কয়েনে ৫,০০০ টাকা। মোট ৫০ মিনিট কল সম্পন্ন হতে হবে।</p>
+                        
+                        <div class="progress-container">
+                            <label>উইথড্র অগ্রগতি (৫০ মিনিট কল শর্ত):</label>
+                            <div class="progress-bar">
+                                <div id="withdraw-progress" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <span id="withdraw-progress-text">০ / ৫০ মিনিট</span>
+                        </div>
+
+                        <form id="withdraw-form" onsubmit="handleWithdraw(event)">
+                            <div class="input-group">
+                                <label>পেমেন্ট মেথড</label>
+                                <select id="withdraw-method">
+                                    <option value="bKash">বিকাশ (bKash)</option>
+                                    <option value="Nagad">নগদ (Nagad)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>একাউন্ট নম্বর</label>
+                                <input type="tel" id="withdraw-account" required placeholder="০১XXXXXXXXX">
+                            </div>
+                            <button type="submit" class="withdraw-btn">৫,০০০ টাকা উইথড্র করুন</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- এজেন্সি ম্যানেজমেন্ট ভিউ -->
+            <section id="agency-view" class="sub-view hidden">
+                <div class="agency-dashboard">
+                    <h3>এজেন্সি ড্যাশবোর্ড</h3>
+                    <p class="agency-policy">সব সদস্যের কল আর্নিং থেকে এজেন্সি মালিক ১০% স্বয়ংক্রিয় কমিশন পাবে।</p>
+                    
+                    <div class="gift-box">
+                        <h4>মেম্বারকে কয়েন গিফট করুন</h4>
+                        <div class="inline-form">
+                            <input type="number" id="gift-member-id" placeholder="মেম্বার ইউজার আইডি">
+                            <input type="number" id="gift-coins-amount" placeholder="কয়েনের সংখ্যা">
+                            <button onclick="giftCoinsToMember()">গিফট পাঠান</button>
+                        </div>
+                    </div>
+
+                    <h4>আপনার এজেন্সি মেম্বারগণ</h4>
+                    <div id="agency-members-list" class="members-list"></div>
+                </div>
+            </section>
+
+            <!-- এডমিন সাপোর্ট ভিউ -->
+            <section id="support-view" class="sub-view hidden">
+                <div class="support-chat">
+                    <div class="chat-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <span>এডমিন সাপোর্ট সরাসরি চ্যাট</span>
+                    </div>
+                    <div id="chat-messages" class="chat-body"></div>
+                    <form class="chat-footer" onsubmit="sendSupportMessage(event)">
+                        <input type="text" id="chat-input" placeholder="আপনার সমস্যা লিখুন..." required>
+                        <button type="submit">পাঠান</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- ফুটার মেনু -->
+        <footer class="bottom-nav">
+            <button class="nav-item active" onclick="showView('home-view')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>হোম</span>
+            </button>
+            <button class="nav-item" onclick="showMyProfile()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>প্রোফাইল</span>
+            </button>
+            <button class="nav-item" onclick="showView('agency-view')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>এজেন্সি</span>
+            </button>
+            <button class="nav-item" onclick="showView('support-view')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <span>সাপোর্ট</span>
+            </button>
+        </footer>
+    </div>
+
+    <!-- লাইভ ভিডিও কল ইন্টারফেস (ইমু / হোয়াটসঅ্যাপ স্টাইল মডাল) -->
+    <div id="call-modal" class="call-overlay hidden">
+        <div class="video-stage">
+            <video id="remote-video" autoplay playsinline></video>
+            <video id="local-video" autoplay playsinline muted></video>
+            
+            <div class="call-stats-overlay">
+                <span id="call-duration-timer">০০:০০</span>
+                <span id="call-rule-badge">ন্যূনতম ১০ মিনিট থাকতে হবে</span>
+            </div>
+
+            <div class="call-controls">
+                <button id="toggle-audio-btn" class="ctrl-btn" onclick="toggleAudio()">
+                    <svg id="mic-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                </button>
+                <button class="ctrl-btn end-call-btn" onclick="endCurrentCall()">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+                </button>
+                <button id="toggle-video-btn" class="ctrl-btn" onclick="toggleVideo()">
+                    <svg id="cam-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ইনকামিং কল রিংগিং ডায়ালগ -->
+    <div id="incoming-call-alert" class="incoming-dialog hidden">
+        <div class="dialog-card">
+            <h4>ইনকামিং ভিডিও কল...</h4>
+            <p id="caller-id-display">ইউজার কল দিচ্ছেন</p>
+            <div class="incoming-actions">
+                <button class="accept-btn" onclick="acceptIncomingCall()">রিসিভ করুন</button>
+                <button class="reject-btn" onclick="rejectIncomingCall()">কেটে দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/webrtc.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
