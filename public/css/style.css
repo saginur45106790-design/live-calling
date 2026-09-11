@@ -1,0 +1,666 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg-dark: #0f1015;
+    --card-dark: #191b24;
+    --card-light: #24283b;
+    --accent: #ff007f;
+    --accent-gradient: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+    --gold: #f1c40f;
+    --text-white: #ffffff;
+    --text-dim: #8b92a8;
+    --danger: #e74c3c;
+    --success: #2ecc71;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.view-panel.hidden, .sub-view.hidden {
+    display: none !important;
+}
+
+/* অথেনটিকেশন লেআউট */
+#auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.auth-card {
+    background: var(--card-dark);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #2d3248;
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #2d3248;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+}
+
+.input-group input, .input-group select {
+    background: var(--bg-dark);
+    border: 1px solid #2d3248;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-group input:focus, .input-group select:focus {
+    border-color: var(--accent);
+}
+
+.primary-btn {
+    width: 100%;
+    background: var(--accent-gradient);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* টপ ও বটম নেভিগেশন */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--card-dark);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #2d3248;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wallet-badge {
+    background: #282c3f;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--card-dark);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #2d3248;
+    z-index: 100;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-dim);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.nav-item.active {
+    color: var(--accent);
+}
+
+.content-body {
+    padding: 16px;
+    margin-bottom: 70px;
+}
+
+/* Bigo স্টাইল হোম স্ক্রিন */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.pulse-indicator {
+    width: 10px;
+    height: 10px;
+    background: var(--success);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--success);
+}
+
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+.user-stream-card {
+    background: var(--card-dark);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #2d3248;
+    transition: transform 0.2s;
+    position: relative;
+}
+
+.user-stream-card:hover {
+    transform: translateY(-4px);
+}
+
+.card-cover {
+    height: 150px;
+    background: linear-gradient(180deg, #3a3f58 0%, #191b24 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-details {
+    padding: 10px;
+}
+
+.card-details h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.live-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--accent);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+/* প্রোফাইল ভিউ */
+.profile-card {
+    background: var(--card-dark);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--card-light);
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--accent);
+}
+
+.default-avatar {
+    width: 50px;
+    height: 50px;
+    color: var(--text-dim);
+}
+
+.agency-tag {
+    color: var(--gold);
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.action-buttons-group {
+    margin: 20px 0;
+}
+
+.call-btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    background: var(--bg-dark);
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-num {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.ref-link-box {
+    background: var(--card-light);
+    padding: 14px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.copy-field {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.copy-field input {
+    flex: 1;
+    background: var(--bg-dark);
+    border: 1px solid #3d425c;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.copy-field button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ওয়ালেট ও উইথড্রল */
+.wallet-dashboard {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--card-dark);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.wallet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.balance-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.recharge-section {
+    background: var(--card-light);
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.recharge-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.recharge-buttons button {
+    flex: 1;
+    background: #2f354d;
+    color: #fff;
+    border: 1px solid #485074;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.withdraw-section {
+    background: var(--bg-dark);
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.rule-hint {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 6px 0 14px;
+}
+
+.progress-container {
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #2a2e42;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--success);
+    transition: width 0.3s;
+}
+
+.withdraw-btn {
+    width: 100%;
+    background: var(--accent-gradient);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* লাইভ ভিডিও কল স্টেজ */
+.call-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 1000;
+}
+
+.video-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#remote-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#local-video {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 110px;
+    height: 160px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.call-stats-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#call-duration-timer {
+    background: rgba(0,0,0,0.6);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #2ecc71;
+}
+
+#call-rule-badge {
+    background: rgba(231, 76, 60, 0.8);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.call-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+.ctrl-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+}
+
+.end-call-btn {
+    background: var(--danger);
+}
+
+/* ইনকামিং ডায়ালগ */
+.incoming-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.dialog-card {
+    background: var(--card-dark);
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    width: 300px;
+}
+
+.incoming-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.accept-btn {
+    flex: 1;
+    background: var(--success);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.reject-btn {
+    flex: 1;
+    background: var(--danger);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* সাপোর্ট চ্যাট */
+.support-chat {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--card-dark);
+    height: 480px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 14px;
+    border-bottom: 1px solid #2d3248;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-msg {
+    max-width: 75%;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.chat-msg.mine {
+    align-self: flex-end;
+    background: var(--accent);
+}
+
+.chat-msg.other {
+    align-self: flex-start;
+    background: var(--card-light);
+}
+
+.chat-footer {
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #2d3248;
+}
+
+.chat-footer input {
+    flex: 1;
+    background: var(--bg-dark);
+    border: 1px solid #2d3248;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.chat-footer button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
